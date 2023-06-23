@@ -3,7 +3,7 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS public."Attendance"
 (
-    attendance_id integer NOT NULL,
+    attendance_id serial NOT NULL,
     member_id integer NOT NULL,
     class_id integer NOT NULL,
     attendance_date date NOT NULL,
@@ -12,17 +12,17 @@ CREATE TABLE IF NOT EXISTS public."Attendance"
 
 CREATE TABLE IF NOT EXISTS public."Class"
 (
-    class_id integer NOT NULL DEFAULT 0,
+    class_id serial NOT NULL,
     timeslot_id integer NOT NULL,
     class_name character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    description text COLLATE pg_catalog."default" NOT NULL,
+    description text,
     capacity integer NOT NULL GENERATED ALWAYS AS IDENTITY ( START 10 MINVALUE 10 MAXVALUE 80 ),
     CONSTRAINT "Class_pkey" PRIMARY KEY (class_id)
 );
 
 CREATE TABLE IF NOT EXISTS public."Schedule"
 (
-    schedule_id integer NOT NULL,
+    schedule_id serial NOT NULL,
     class_id integer NOT NULL,
     instructor_id integer NOT NULL,
     timeslot_id integer NOT NULL,
@@ -31,22 +31,22 @@ CREATE TABLE IF NOT EXISTS public."Schedule"
 
 CREATE TABLE IF NOT EXISTS public."Instructor"
 (
-    instructor_id integer NOT NULL DEFAULT 0,
-    instructor_first character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    instructor_id serial NOT NULL,
+    instructor_first character varying(255) COLLATE pg_catalog."default" NOT NULL,
     instructor_last character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    instructor_street character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    instructor_city character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    instructor_province character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    instructor_postalcode character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    instructor_phone numeric(10, 0) NOT NULL,
+    instructor_street character varying(255),
+    instructor_city character varying(255),
+    instructor_province character varying(255),
+    instructor_postalcode character varying(10),
+    instructor_phone numeric(10, 0),
     instructor_email character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    availablility time(6) with time zone NOT NULL,
+    availablility time without time zone,
     CONSTRAINT "Instructor_pkey" PRIMARY KEY (instructor_id)
 );
 
 CREATE TABLE IF NOT EXISTS public."Maintenance"
 (
-    maintenance_id integer NOT NULL,
+    maintenance_id serial NOT NULL,
     equipment_id integer NOT NULL,
     instructor_id integer NOT NULL,
     maintenance_date date NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS public."Maintenance"
 
 CREATE TABLE IF NOT EXISTS public."Equipment"
 (
-    equipment_id integer NOT NULL,
+    equipment_id serial NOT NULL,
     facility_id integer NOT NULL,
     equipment_type character varying(100) COLLATE pg_catalog."default" NOT NULL,
     date_purchased date NOT NULL,
@@ -66,23 +66,23 @@ CREATE TABLE IF NOT EXISTS public."Equipment"
 
 CREATE TABLE IF NOT EXISTS public."TimeSlot"
 (
-    timeslot_id integer NOT NULL DEFAULT 0,
+    timeslot_id serial NOT NULL DEFAULT 0,
     date date NOT NULL,
-    "time" time(6) without time zone NOT NULL,
+    "time" time(6) without time zone,
     duration character varying(24) NOT NULL,
     CONSTRAINT "TimeSlot_pkey" PRIMARY KEY (timeslot_id)
 );
 
 CREATE TABLE IF NOT EXISTS public."Member"
 (
-    member_id integer NOT NULL DEFAULT 0,
-    member_first character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    member_last character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    member_street character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    member_city character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    member_province character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    member_postalcode character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    member_phone numeric(10, 0) NOT NULL,
+    member_id serial NOT NULL,
+    member_first character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    member_last character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    member_street character varying(255),
+    member_city character varying(255),
+    member_province character varying(255),
+    member_postalcode character varying(10),
+    member_phone numeric(10, 0),
     member_email character varying(100) COLLATE pg_catalog."default" NOT NULL,
     member_status boolean NOT NULL,
     CONSTRAINT "Member_pkey" PRIMARY KEY (member_id)
@@ -90,18 +90,18 @@ CREATE TABLE IF NOT EXISTS public."Member"
 
 CREATE TABLE IF NOT EXISTS public."Membership"
 (
-    membership_id integer NOT NULL DEFAULT 0,
+    membership_id serial NOT NULL,
     member_id integer NOT NULL,
     facility_id integer NOT NULL,
     start_date date NOT NULL,
-    end_date date NOT NULL,
+    end_date date,
     payment_status boolean NOT NULL,
     CONSTRAINT "Membership_pkey" PRIMARY KEY (membership_id)
 );
 
 CREATE TABLE IF NOT EXISTS public."Location"
 (
-    facility_id integer NOT NULL,
+    facility_id serial NOT NULL,
     facility_name character varying(100) COLLATE pg_catalog."default" NOT NULL,
     facility_street character varying(100) COLLATE pg_catalog."default" NOT NULL,
     facility_city character varying(100) COLLATE pg_catalog."default" NOT NULL,
@@ -113,19 +113,19 @@ CREATE TABLE IF NOT EXISTS public."Location"
 
 CREATE TABLE IF NOT EXISTS public."Billing"
 (
-    billing_id integer NOT NULL,
+    billing_id serial NOT NULL,
     member_id integer NOT NULL,
     membership_id integer NOT NULL,
     invoice_id integer NOT NULL,
     payment_id integer NOT NULL,
-    payment_history text NOT NULL,
+    payment_history text,
     payment_method text NOT NULL,
     CONSTRAINT "Billing_pkey" PRIMARY KEY (billing_id)
 );
 
 CREATE TABLE IF NOT EXISTS public."Invoice"
 (
-    invoice_id integer NOT NULL DEFAULT 0,
+    invoice_id serial NOT NULL,
     member_id integer NOT NULL,
     membership_id integer NOT NULL,
     invoice_date date NOT NULL,
@@ -136,12 +136,12 @@ CREATE TABLE IF NOT EXISTS public."Invoice"
 
 CREATE TABLE IF NOT EXISTS public."Payments"
 (
-    payment_id integer NOT NULL DEFAULT 0,
+    payment_id serial NOT NULL,
     payment_amount money NOT NULL,
     payment_date date NOT NULL,
     membership_id integer NOT NULL,
-    last_payment date NOT NULL,
-    next_payment date NOT NULL,
+    last_payment date,
+    next_payment date,
     CONSTRAINT "Payments_pkey" PRIMARY KEY (payment_id)
 );
 
