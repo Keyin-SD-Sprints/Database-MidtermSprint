@@ -80,4 +80,56 @@ GROUP BY
 ORDER BY
 	member_id;
 
+--9.1 Displays the members and what classes they are signed up to. Sorted by class name and class_id ascending
+-- focuses on the classes.
+SELECT
+	public."Member".member_id
+	,member_first
+	,member_last
+	,public."Class".class_id
+	,class_name
+FROM public."Member"
+JOIN public."Members_xref_Classes"
+	ON public."Member".member_id = public."Members_xref_Classes".member_id
+JOIN public."Class"
+	ON public."Members_xref_Classes".class_id = public."Class".class_id
+ORDER BY
+	class_name
+	,class_id ASC
 
+--9.2 Changing sort focuses on each customer. Easier to see who is signed up for multiple classes this way.
+SELECT
+	public."Member".member_id
+	,member_first
+	,member_last
+	,public."Class".class_id
+	,class_name
+FROM public."Member"
+JOIN public."Members_xref_Classes"
+	ON public."Member".member_id = public."Members_xref_Classes".member_id
+JOIN public."Class"
+	ON public."Members_xref_Classes".class_id = public."Class".class_id
+ORDER BY
+	member_last ASC
+	
+--10. Shows attendance with class_id, class_name, and date with a count of antendees 
+-- sorted ascending by class_name, class_id, and attendance_date.
+SELECT
+    public."Class".class_id
+	,class_name
+	,attendance_date
+	,COUNT(public."Member".member_id) AS attendee_count
+FROM
+    public."Class"
+JOIN
+    public."Attendance" ON public."Class".class_id = public."Attendance".class_id
+JOIN
+    public."Member" ON public."Attendance".member_id = public."Member".member_id
+GROUP BY
+    public."Class".class_id,
+    class_name,
+    attendance_date
+ORDER BY 
+	class_name,
+	class_id,
+	attendance_date ASC
